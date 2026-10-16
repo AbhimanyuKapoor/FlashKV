@@ -5,9 +5,11 @@ import (
 	"log"
 	"net"
 	"strings"
+	"time"
 
 	"github.com/Hari08-dev/flashkv/internal/datastore"
 	"github.com/Hari08-dev/flashkv/internal/parser"
+	"github.com/Hari08-dev/flashkv/internal/ttl"
 )
 
 type Server struct {
@@ -19,6 +21,10 @@ type Server struct {
 func NewServer(address string) *Server {
 
 	store := datastore.NewStore()
+
+	cleaner := ttl.New(store, time.Second)
+
+	go cleaner.Start()
 
 	return &Server{
 		address: address,

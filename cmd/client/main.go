@@ -18,7 +18,7 @@ func main() {
 	defer conn.Close()
 
 	fmt.Println("Connected to FlashKV 🚀")
-	fmt.Println("Type EXIT to quit.\n")
+	fmt.Println("Type EXIT to quit.")
 
 	serverReader := bufio.NewReader(conn)
 	inputReader := bufio.NewReader(os.Stdin)
