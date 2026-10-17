@@ -129,3 +129,25 @@ func (s *Store) DeleteExpired() {
 		}
 	}
 }
+
+func (s *Store) Export() map[string]Entry {
+
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	copyMap := make(map[string]Entry)
+
+	for k, v := range s.data {
+		copyMap[k] = v
+	}
+
+	return copyMap
+}
+
+func (s *Store) Import(data map[string]Entry) {
+
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	s.data = data
+}

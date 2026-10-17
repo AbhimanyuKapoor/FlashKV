@@ -6,16 +6,34 @@ import (
 	"strings"
 
 	"github.com/Hari08-dev/flashkv/internal/datastore"
+	"github.com/Hari08-dev/flashkv/internal/persistence"
 )
 
 type Parser struct {
-	store *datastore.Store
+	store    *datastore.Store
+	commands map[string]func([]string) string
 }
 
 func New(store *datastore.Store) *Parser {
-	return &Parser{
+
+	p := &Parser{
 		store: store,
 	}
+
+	p.commands = map[string]func([]string) string{
+		"PING":   p.handlePing,
+		"SET":    p.handleSet,
+		"GET":    p.handleGet,
+		"DEL":    p.handleDel,
+		"EXISTS": p.handleExists,
+		"EXPIRE": p.handleExpire,
+		"TTL":    p.handleTTL,
+		"KEYS":   p.handleKeys,
+		"SAVE":   p.handleSave,
+		"LOAD":   p.handleLoad,
+	}
+
+	return p
 }
 
 func (p *Parser) Execute(command string) string {
@@ -26,41 +44,19 @@ func (p *Parser) Execute(command string) string {
 		return "ERR empty command"
 	}
 
-	switch strings.ToUpper(fields[0]) {
+	cmd := strings.ToUpper(fields[0])
 
-	case "SET":
-		return p.handleSet(fields)
+	handler, ok := p.commands[cmd]
 
-	case "GET":
-		return p.handleGet(fields)
-
-	case "DEL":
-		return p.handleDel(fields)
-
-	case "EXISTS":
-		return p.handleExists(fields)
-
-	case "PING":
-		return "PONG"
-
-	case "EXPIRE":
-		return p.handleExpire(fields)
-
-	case "TTL":
-		return p.handleTTL(fields)
-
-	case "KEYS":
-		return p.handleKeys(fields)
-
-	// case "SAVE":
-	// 	return p.handleSave()
-
-	// case "LOAD":
-	// 	return p.handleLoad()
-
-	default:
+	if !ok {
 		return "ERR unknown command"
 	}
+
+	return handler(fields)
+}
+
+func (p *Parser) handlePing(args []string) string {
+	return "PONG"
 }
 
 func (p *Parser) handleSet(args []string) string {
@@ -160,4 +156,26 @@ func (p *Parser) handleKeys(args []string) string {
 	}
 
 	return strings.Join(keys, " ")
+}
+
+func (p *Parser) handleSave(args []string) string {
+
+	err := persistence.Save("snapshots/dump.json", p.store)
+
+	if err != nil {
+		return err.Error()
+	}
+
+	return "OK"
+}
+
+func (p *Parser) handleLoad(args []string) string {
+
+	err := persistence.Load("snapshots/dump.json", p.store)
+
+	if err != nil {
+		return err.Error()
+	}
+
+	return "OK"
 }
