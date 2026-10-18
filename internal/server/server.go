@@ -85,11 +85,6 @@ func (s *Server) handleConnection(conn net.Conn) {
 		log.Printf("[%s] %s\n", conn.RemoteAddr(), command)
 
 		// Execute command
-		response := s.parser.Execute(command)
-
-		// Send only the response
-		if _, err := conn.Write([]byte(response + "\n")); err != nil {
-			return
-		}
+		s.parser.Execute(conn, command)
 	}
 }
