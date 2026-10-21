@@ -2,31 +2,32 @@ package commands
 
 import (
 	"fmt"
-	"net"
 	"strconv"
+
+	"github.com/Hari08-dev/flashkv/internal/client"
 )
 
 type ExpireCommand struct {
 	BaseCommand
 }
 
-func (c *ExpireCommand) Execute(conn net.Conn, args []string) {
+func (c *ExpireCommand) Execute(client *client.Client, args []string) {
 
 	if len(args) != 3 {
-		fmt.Fprintln(conn, "ERR invalid arguments")
+		fmt.Fprintln(client.Conn, "ERR invalid arguments")
 		return
 	}
 
 	seconds, err := strconv.Atoi(args[2])
 	if err != nil {
-		fmt.Fprintln(conn, "ERR invalid TTL")
+		fmt.Fprintln(client.Conn, "ERR invalid TTL")
 		return
 	}
 
 	if !c.Store.Expire(args[1], seconds) {
-		fmt.Fprintln(conn, "(nil)")
+		fmt.Fprintln(client.Conn, "(nil)")
 		return
 	}
 
-	fmt.Fprintln(conn, "OK")
+	fmt.Fprintln(client.Conn, "OK")
 }

@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Hari08-dev/flashkv/internal/client"
 	"github.com/Hari08-dev/flashkv/internal/datastore"
 	"github.com/Hari08-dev/flashkv/internal/parser"
 	"github.com/Hari08-dev/flashkv/internal/ttl"
@@ -16,6 +17,7 @@ type Server struct {
 	address string
 	store   *datastore.Store
 	parser  *parser.Parser
+	manager *client.Manager
 }
 
 func NewServer(address string) *Server {
@@ -24,12 +26,15 @@ func NewServer(address string) *Server {
 
 	cleaner := ttl.New(store, time.Second)
 
+	manager := client.NewManager()
+
 	go cleaner.Start()
 
 	return &Server{
 		address: address,
 		store:   store,
 		parser:  parser.New(store),
+		manager: manager,
 	}
 }
 
@@ -58,13 +63,22 @@ func (s *Server) Start() error {
 }
 
 func (s *Server) handleConnection(conn net.Conn) {
-	defer conn.Close()
+
+	client := client.New(conn)
+
+	s.manager.Add(client)
+
+	defer func() {
+		s.manager.Remove(client.ID)
+		conn.Close()
+		log.Printf("Client disconnected: %s\n", client.ID)
+	}()
 
 	reader := bufio.NewReader(conn)
 
 	for {
 
-		// Show prompt
+		// Prompt
 		if _, err := conn.Write([]byte("flashkv> ")); err != nil {
 			return
 		}
@@ -72,7 +86,6 @@ func (s *Server) handleConnection(conn net.Conn) {
 		// Read command
 		command, err := reader.ReadString('\n')
 		if err != nil {
-			log.Printf("Client disconnected: %s\n", conn.RemoteAddr())
 			return
 		}
 
@@ -82,9 +95,9 @@ func (s *Server) handleConnection(conn net.Conn) {
 			continue
 		}
 
-		log.Printf("[%s] %s\n", conn.RemoteAddr(), command)
+		log.Printf("[%s] %s\n", client.ID, command)
 
 		// Execute command
-		s.parser.Execute(conn, command)
+		s.parser.Execute(client, command)
 	}
 }

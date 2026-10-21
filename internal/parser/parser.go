@@ -2,9 +2,9 @@ package parser
 
 import (
 	"fmt"
-	"net"
 	"strings"
 
+	"github.com/Hari08-dev/flashkv/internal/client"
 	"github.com/Hari08-dev/flashkv/internal/commands"
 	"github.com/Hari08-dev/flashkv/internal/datastore"
 )
@@ -62,23 +62,22 @@ func New(store *datastore.Store) *Parser {
 	}
 }
 
-func (p *Parser) Execute(conn net.Conn, command string) {
+func (p *Parser) Execute(client *client.Client, command string) {
 
 	fields := strings.Fields(command)
 
 	if len(fields) == 0 {
-		fmt.Fprintln(conn, "ERR empty command")
+		fmt.Fprintln(client.Conn, "ERR empty command")
 		return
 	}
 
 	cmd := strings.ToUpper(fields[0])
 
 	handler, ok := p.commands[cmd]
-
 	if !ok {
-		fmt.Fprintln(conn, "ERR unknown command")
+		fmt.Fprintln(client.Conn, "ERR unknown command")
 		return
 	}
 
-	handler.Execute(conn, fields)
+	handler.Execute(client, fields)
 }

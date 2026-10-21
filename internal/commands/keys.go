@@ -2,22 +2,23 @@ package commands
 
 import (
 	"fmt"
-	"net"
 	"strings"
+
+	"github.com/Hari08-dev/flashkv/internal/client"
 )
 
 type KeysCommand struct {
 	BaseCommand
 }
 
-func (c *KeysCommand) Execute(conn net.Conn, args []string) {
+func (c *KeysCommand) Execute(client *client.Client, args []string) {
 
 	keys := c.Store.Keys()
 
 	if len(keys) == 0 {
-		fmt.Fprintln(conn, "(empty)")
+		fmt.Fprintln(client.Conn, "(empty)")
 		return
 	}
 
-	fmt.Fprintln(conn, strings.Join(keys, " "))
+	fmt.Fprintln(client.Conn, strings.Join(keys, " "))
 }

@@ -2,11 +2,12 @@ package commands
 
 import (
 	"fmt"
-	"net"
+
+	"github.com/Hari08-dev/flashkv/internal/client"
 )
 
 type PingCommand struct{}
 
-func (c *PingCommand) Execute(conn net.Conn, args []string) {
-	fmt.Fprintln(conn, "PONG")
+func (c *PingCommand) Execute(client *client.Client, args []string) {
+	fmt.Fprintln(client.Conn, "PONG")
 }

@@ -2,24 +2,25 @@ package commands
 
 import (
 	"fmt"
-	"net"
+
+	"github.com/Hari08-dev/flashkv/internal/client"
 )
 
 type ExistsCommand struct {
 	BaseCommand
 }
 
-func (c *ExistsCommand) Execute(conn net.Conn, args []string) {
+func (c *ExistsCommand) Execute(client *client.Client, args []string) {
 
 	if len(args) != 2 {
-		fmt.Fprintln(conn, "ERR invalid arguments")
+		fmt.Fprintln(client.Conn, "ERR invalid arguments")
 		return
 	}
 
 	if c.Store.Exists(args[1]) {
-		fmt.Fprintln(conn, "1")
+		fmt.Fprintln(client.Conn, "1")
 		return
 	}
 
-	fmt.Fprintln(conn, "0")
+	fmt.Fprintln(client.Conn, "0")
 }
