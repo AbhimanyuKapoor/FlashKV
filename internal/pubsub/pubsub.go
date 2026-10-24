@@ -2,59 +2,69 @@ package pubsub
 
 import (
 	"sync"
+
+	"github.com/Hari08-dev/flashkv/internal/client"
 )
 
 type PubSub struct {
-	mu   sync.RWMutex
-	subs map[string][]chan string
+	mu sync.RWMutex
+
+	channels map[string]map[string]*client.Client
 }
 
 func New() *PubSub {
+
 	return &PubSub{
-		subs: make(map[string][]chan string),
+		channels: make(map[string]map[string]*client.Client),
 	}
 }
 
-func (p *PubSub) Subscribe(channel string) chan string {
+func (p *PubSub) Subscribe(channel string, clint *client.Client) {
+
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
-	ch := make(chan string, 10)
+	if _, ok := p.channels[channel]; !ok {
+		p.channels[channel] = make(map[string]*client.Client)
+	}
 
-	p.subs[channel] = append(p.subs[channel], ch)
-
-	return ch
+	p.channels[channel][clint.ID] = clint
 }
 
-func (p *PubSub) Publish(channel, message string) {
+func (p *PubSub) Unsubscribe(channel string, client *client.Client) {
+
+	p.mu.Lock()
+	defer p.mu.Unlock()
+
+	if subscribers, ok := p.channels[channel]; ok {
+
+		delete(subscribers, client.ID)
+
+		if len(subscribers) == 0 {
+			delete(p.channels, channel)
+		}
+	}
+}
+
+func (p *PubSub) Publish(channel, message string) int {
 
 	p.mu.RLock()
 	defer p.mu.RUnlock()
 
-	for _, sub := range p.subs[channel] {
-		select {
-		case sub <- message:
-		default:
-		}
+	subscribers, ok := p.channels[channel]
+
+	if !ok {
+		return 0
 	}
-}
 
-func (p *PubSub) Unsubscribe(channel string, target chan string) {
+	for _, client := range subscribers {
 
-	p.mu.Lock()
-	defer p.mu.Unlock()
-
-	subs := p.subs[channel]
-
-	for i, ch := range subs {
-
-		if ch == target {
-
-			close(ch)
-
-			p.subs[channel] = append(subs[:i], subs[i+1:]...)
-
-			break
-		}
+		client.Conn.Write(
+			[]byte(
+				"[" + channel + "] " + message + "\n",
+			),
+		)
 	}
+
+	return len(subscribers)
 }

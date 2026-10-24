@@ -7,6 +7,7 @@ import (
 	"github.com/Hari08-dev/flashkv/internal/client"
 	"github.com/Hari08-dev/flashkv/internal/commands"
 	"github.com/Hari08-dev/flashkv/internal/datastore"
+	"github.com/Hari08-dev/flashkv/internal/pubsub"
 )
 
 type Parser struct {
@@ -15,8 +16,11 @@ type Parser struct {
 
 func New(store *datastore.Store) *Parser {
 
+	ps := pubsub.New()
+
 	base := commands.BaseCommand{
-		Store: store,
+		Store:  store,
+		PubSub: ps,
 	}
 
 	return &Parser{
@@ -56,6 +60,13 @@ func New(store *datastore.Store) *Parser {
 			},
 
 			"LOAD": &commands.LoadCommand{
+				BaseCommand: base,
+			},
+			"PUBLISH": &commands.PublishCommand{
+				BaseCommand: base,
+			},
+
+			"SUBSCRIBE": &commands.SubscribeCommand{
 				BaseCommand: base,
 			},
 		},

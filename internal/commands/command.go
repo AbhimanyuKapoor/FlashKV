@@ -3,6 +3,7 @@ package commands
 import (
 	"github.com/Hari08-dev/flashkv/internal/client"
 	"github.com/Hari08-dev/flashkv/internal/datastore"
+	"github.com/Hari08-dev/flashkv/internal/pubsub"
 )
 
 type Command interface {
@@ -10,5 +11,6 @@ type Command interface {
 }
 
 type BaseCommand struct {
-	Store *datastore.Store
+	Store  *datastore.Store
+	PubSub *pubsub.PubSub
 }

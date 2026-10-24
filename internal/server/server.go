@@ -78,11 +78,6 @@ func (s *Server) handleConnection(conn net.Conn) {
 
 	for {
 
-		// Prompt
-		if _, err := conn.Write([]byte("flashkv> ")); err != nil {
-			return
-		}
-
 		// Read command
 		command, err := reader.ReadString('\n')
 		if err != nil {

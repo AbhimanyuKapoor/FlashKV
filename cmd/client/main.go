@@ -19,22 +19,29 @@ func main() {
 
 	fmt.Println("Connected to FlashKV 🚀")
 	fmt.Println("Type EXIT to quit.")
+	fmt.Printf("\n")
 
-	serverReader := bufio.NewReader(conn)
-	inputReader := bufio.NewReader(os.Stdin)
+	// Continuously read everything coming from server
+	go func() {
+		reader := bufio.NewReader(conn)
+
+		for {
+			fmt.Printf("flashkv> ")
+			msg, err := reader.ReadString('\n')
+			if err != nil {
+				fmt.Println("\nDisconnected from server.")
+				os.Exit(0)
+			}
+
+			fmt.Print("\r\033[2K") // Clear current line (ANSI terminals)
+			fmt.Println(msg)
+		}
+	}()
+
+	input := bufio.NewReader(os.Stdin)
 
 	for {
-
-		// Read prompt
-		prompt, err := serverReader.ReadString(' ')
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		fmt.Print(prompt)
-
-		// Read user input
-		command, err := inputReader.ReadString('\n')
+		command, err := input.ReadString('\n')
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -42,7 +49,6 @@ func main() {
 		command = strings.TrimSpace(command)
 
 		if strings.EqualFold(command, "EXIT") {
-			fmt.Println("Goodbye 👋")
 			return
 		}
 
@@ -50,13 +56,5 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-
-		// Read server response
-		response, err := serverReader.ReadString('\n')
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		fmt.Print(response)
 	}
 }
