@@ -93,6 +93,43 @@ func New(store *datastore.Store) *Parser {
 			"LRANGE": &commands.LRangeCommand{
 				BaseCommand: base,
 			},
+			"HSET": &commands.HSetCommand{
+				BaseCommand: base,
+			},
+			"HGET": &commands.HGetCommand{
+				BaseCommand: base,
+			},
+			"HDEL": &commands.HDelCommand{
+				BaseCommand: base,
+			},
+			"HEXISTS": &commands.HExistsCommand{
+				BaseCommand: base,
+			},
+			"HGETALL": &commands.HGetAllCommand{
+				BaseCommand: base,
+			},
+			"HLEN": &commands.HLenCommand{
+				BaseCommand: base,
+			},
+			"SADD": &commands.SAddCommand{
+				BaseCommand: base,
+			},
+
+			"SREM": &commands.SRemCommand{
+				BaseCommand: base,
+			},
+
+			"SISMEMBER": &commands.SIsMemberCommand{
+				BaseCommand: base,
+			},
+
+			"SMEMBERS": &commands.SMembersCommand{
+				BaseCommand: base,
+			},
+
+			"SCARD": &commands.SCardCommand{
+				BaseCommand: base,
+			},
 		},
 	}
 }

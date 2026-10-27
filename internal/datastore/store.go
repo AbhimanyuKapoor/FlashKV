@@ -204,3 +204,59 @@ func (s *Store) GetList(key string) (*List, error) {
 
 	return entry.Value.List, nil
 }
+
+func (s *Store) GetHash(key string) (*Hash, error) {
+
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	entry, ok := s.data[key]
+
+	if !ok {
+
+		hash := NewHash()
+
+		s.data[key] = Entry{
+			Value: &Value{
+				Type: HashType,
+				Hash: hash,
+			},
+		}
+
+		return hash, nil
+	}
+
+	if entry.Value.Type != HashType {
+		return nil, ErrWrongType
+	}
+
+	return entry.Value.Hash, nil
+}
+
+func (s *Store) GetSet(key string) (*Set, error) {
+
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	entry, ok := s.data[key]
+
+	if !ok {
+
+		set := NewSet()
+
+		s.data[key] = Entry{
+			Value: &Value{
+				Type: SetType,
+				Set:  set,
+			},
+		}
+
+		return set, nil
+	}
+
+	if entry.Value.Type != SetType {
+		return nil, ErrWrongType
+	}
+
+	return entry.Value.Set, nil
+}
