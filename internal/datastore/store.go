@@ -6,26 +6,33 @@ import (
 )
 
 type Store struct {
-	mu   sync.RWMutex
+	mu sync.RWMutex
+
 	data map[string]Entry
 }
 
 func NewStore() *Store {
+
 	return &Store{
 		data: make(map[string]Entry),
 	}
 }
 
 func (s *Store) Set(key, value string) {
+
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
 	s.data[key] = Entry{
-		Value: value,
+		Value: &Value{
+			Type:   StringType,
+			String: value,
+		},
 	}
 }
 
 func (s *Store) Get(key string) (string, bool) {
+
 	s.mu.RLock()
 	entry, ok := s.data[key]
 	s.mu.RUnlock()
@@ -34,16 +41,23 @@ func (s *Store) Get(key string) (string, bool) {
 		return "", false
 	}
 
-	// Expired?
-	if !entry.ExpiresAt.IsZero() && time.Now().After(entry.ExpiresAt) {
+	if !entry.ExpiresAt.IsZero() &&
+		time.Now().After(entry.ExpiresAt) {
+
 		s.Delete(key)
+
 		return "", false
 	}
 
-	return entry.Value, true
+	if entry.Value.Type != StringType {
+		return "", false
+	}
+
+	return entry.Value.String, true
 }
 
 func (s *Store) Delete(key string) bool {
+
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -52,24 +66,30 @@ func (s *Store) Delete(key string) bool {
 	}
 
 	delete(s.data, key)
+
 	return true
 }
 
 func (s *Store) Exists(key string) bool {
+
 	_, ok := s.Get(key)
+
 	return ok
 }
 
 func (s *Store) Expire(key string, seconds int) bool {
+
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
 	entry, ok := s.data[key]
+
 	if !ok {
 		return false
 	}
 
-	entry.ExpiresAt = time.Now().Add(time.Duration(seconds) * time.Second)
+	entry.ExpiresAt =
+		time.Now().Add(time.Duration(seconds) * time.Second)
 
 	s.data[key] = entry
 
@@ -77,6 +97,7 @@ func (s *Store) Expire(key string, seconds int) bool {
 }
 
 func (s *Store) TTL(key string) int {
+
 	s.mu.RLock()
 	entry, ok := s.data[key]
 	s.mu.RUnlock()
@@ -92,7 +113,9 @@ func (s *Store) TTL(key string) int {
 	ttl := int(time.Until(entry.ExpiresAt).Seconds())
 
 	if ttl < 0 {
+
 		s.Delete(key)
+
 		return -2
 	}
 
@@ -100,6 +123,7 @@ func (s *Store) TTL(key string) int {
 }
 
 func (s *Store) Keys() []string {
+
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
@@ -113,6 +137,7 @@ func (s *Store) Keys() []string {
 }
 
 func (s *Store) DeleteExpired() {
+
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -150,4 +175,32 @@ func (s *Store) Import(data map[string]Entry) {
 	defer s.mu.Unlock()
 
 	s.data = data
+}
+
+func (s *Store) GetList(key string) (*List, error) {
+
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	entry, ok := s.data[key]
+
+	if !ok {
+
+		list := NewList()
+
+		s.data[key] = Entry{
+			Value: &Value{
+				Type: ListType,
+				List: list,
+			},
+		}
+
+		return list, nil
+	}
+
+	if entry.Value.Type != ListType {
+		return nil, ErrWrongType
+	}
+
+	return entry.Value.List, nil
 }

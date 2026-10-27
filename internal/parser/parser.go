@@ -69,6 +69,30 @@ func New(store *datastore.Store) *Parser {
 			"SUBSCRIBE": &commands.SubscribeCommand{
 				BaseCommand: base,
 			},
+
+			"LPUSH": &commands.LPushCommand{
+				BaseCommand: base,
+			},
+
+			"RPUSH": &commands.RPushCommand{
+				BaseCommand: base,
+			},
+
+			"LPOP": &commands.LPopCommand{
+				BaseCommand: base,
+			},
+
+			"RPOP": &commands.RPopCommand{
+				BaseCommand: base,
+			},
+
+			"LLEN": &commands.LLenCommand{
+				BaseCommand: base,
+			},
+
+			"LRANGE": &commands.LRangeCommand{
+				BaseCommand: base,
+			},
 		},
 	}
 }
