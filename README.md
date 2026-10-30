@@ -60,11 +60,13 @@ FlashKV runs as an asynchronous TCP server listening by default on port `:6379`.
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - [Go 1.20+](https://golang.org/doc/install) installed on your machine.
 
 ### Installation
 
 Clone the repository:
+
 ```bash
 git clone https://github.com/Hari08-dev/flashkv.git
 cd flashkv
@@ -73,10 +75,13 @@ cd flashkv
 ### Running the Server
 
 Start the FlashKV server on default port `6379`:
+
 ```bash
 go run cmd/server/main.go
 ```
-*Output:*
+
+_Output:_
+
 ```text
 2026/08/21 12:00:00 FlashKV server starting on port 6379...
 2026/08/21 12:00:00 Listening on :6379
@@ -85,10 +90,13 @@ go run cmd/server/main.go
 ### Running the Interactive CLI Client
 
 In a separate terminal, launch the FlashKV CLI:
+
 ```bash
 go run cmd/client/main.go
 ```
-*Output:*
+
+_Output:_
+
 ```text
 Connected to FlashKV 🚀
 Type EXIT to quit.
@@ -107,85 +115,86 @@ FlashKV
 
 ### 🔹 Basic & String Operations
 
-| Command | Usage | Description | Example |
-| :--- | :--- | :--- | :--- |
-| `PING` | `PING` | Health check endpoint. Returns `PONG`. | `PING` |
-| `SET` | `SET <key> <value>` | Sets a string value for a key. | `SET name Alice` |
-| `GET` | `GET <key>` | Retrieves the string value of a key. Returns `(nil)` if not found. | `GET name` |
-| `DEL` | `DEL <key>` | Deletes a key and its associated value. | `DEL name` |
-| `EXISTS` | `EXISTS <key>` | Checks if a key exists (`1`) or not (`0`). | `EXISTS name` |
-| `KEYS` | `KEYS` | Returns all active keys in the store. | `KEYS` |
+| Command  | Usage               | Description                                                        | Example          |
+| :------- | :------------------ | :----------------------------------------------------------------- | :--------------- |
+| `PING`   | `PING`              | Health check endpoint. Returns `PONG`.                             | `PING`           |
+| `SET`    | `SET <key> <value>` | Sets a string value for a key.                                     | `SET name Alice` |
+| `GET`    | `GET <key>`         | Retrieves the string value of a key. Returns `(nil)` if not found. | `GET name`       |
+| `DEL`    | `DEL <key>`         | Deletes a key and its associated value.                            | `DEL name`       |
+| `EXISTS` | `EXISTS <key>`      | Checks if a key exists (`1`) or not (`0`).                         | `EXISTS name`    |
+| `KEYS`   | `KEYS`              | Returns all active keys in the store.                              | `KEYS`           |
 
 ---
 
 ### 🔹 Key Expiration & TTL
 
-| Command | Usage | Description | Example |
-| :--- | :--- | :--- | :--- |
-| `EXPIRE` | `EXPIRE <key> <seconds>` | Sets a time-to-live (in seconds) on a key. | `EXPIRE session:1 300` |
-| `TTL` | `TTL <key>` | Gets remaining TTL in seconds. Returns `-1` if no TTL, `-2` if key doesn't exist. | `TTL session:1` |
+| Command  | Usage                    | Description                                                                       | Example                |
+| :------- | :----------------------- | :-------------------------------------------------------------------------------- | :--------------------- |
+| `EXPIRE` | `EXPIRE <key> <seconds>` | Sets a time-to-live (in seconds) on a key.                                        | `EXPIRE session:1 300` |
+| `TTL`    | `TTL <key>`              | Gets remaining TTL in seconds. Returns `-1` if no TTL, `-2` if key doesn't exist. | `TTL session:1`        |
 
 ---
 
 ### 🔹 List Operations
 
-| Command | Usage | Description | Example |
-| :--- | :--- | :--- | :--- |
-| `LPUSH` | `LPUSH <key> <value>` | Prepends a value to the head of a list. | `LPUSH tasks "write docs"` |
-| `RPUSH` | `RPUSH <key> <value>` | Appends a value to the tail of a list. | `RPUSH tasks "run tests"` |
-| `LPOP` | `LPOP <key>` | Removes and returns the first element of a list. | `LPOP tasks` |
-| `RPOP` | `RPOP <key>` | Removes and returns the last element of a list. | `RPOP tasks` |
-| `LLEN` | `LLEN <key>` | Returns the length of the list. | `LLEN tasks` |
-| `LRANGE` | `LRANGE <key> <start> <stop>` | Returns a subset of elements within range `[start, stop]`. | `LRANGE tasks 0 -1` |
+| Command  | Usage                         | Description                                                | Example                    |
+| :------- | :---------------------------- | :--------------------------------------------------------- | :------------------------- |
+| `LPUSH`  | `LPUSH <key> <value>`         | Prepends a value to the head of a list.                    | `LPUSH tasks "write docs"` |
+| `RPUSH`  | `RPUSH <key> <value>`         | Appends a value to the tail of a list.                     | `RPUSH tasks "run tests"`  |
+| `LPOP`   | `LPOP <key>`                  | Removes and returns the first element of a list.           | `LPOP tasks`               |
+| `RPOP`   | `RPOP <key>`                  | Removes and returns the last element of a list.            | `RPOP tasks`               |
+| `LLEN`   | `LLEN <key>`                  | Returns the length of the list.                            | `LLEN tasks`               |
+| `LRANGE` | `LRANGE <key> <start> <stop>` | Returns a subset of elements within range `[start, stop]`. | `LRANGE tasks 0 -1`        |
 
 ---
 
 ### 🔹 Hash Operations
 
-| Command | Usage | Description | Example |
-| :--- | :--- | :--- | :--- |
-| `HSET` | `HSET <key> <field> <value>` | Sets a field-value pair in a hash stored at key. | `HSET user:100 name Bob` |
-| `HGET` | `HGET <key> <field>` | Retrieves the value associated with field in hash. | `HGET user:100 name` |
-| `HDEL` | `HDEL <key> <field>` | Removes a field from a hash. | `HDEL user:100 name` |
-| `HEXISTS` | `HEXISTS <key> <field>` | Checks if field exists in a hash (`1` or `0`). | `HEXISTS user:100 name` |
-| `HGETALL` | `HGETALL <key>` | Returns all fields and values of a hash. | `HGETALL user:100` |
-| `HLEN` | `HLEN <key>` | Returns the number of fields in a hash. | `HLEN user:100` |
+| Command   | Usage                        | Description                                        | Example                  |
+| :-------- | :--------------------------- | :------------------------------------------------- | :----------------------- |
+| `HSET`    | `HSET <key> <field> <value>` | Sets a field-value pair in a hash stored at key.   | `HSET user:100 name Bob` |
+| `HGET`    | `HGET <key> <field>`         | Retrieves the value associated with field in hash. | `HGET user:100 name`     |
+| `HDEL`    | `HDEL <key> <field>`         | Removes a field from a hash.                       | `HDEL user:100 name`     |
+| `HEXISTS` | `HEXISTS <key> <field>`      | Checks if field exists in a hash (`1` or `0`).     | `HEXISTS user:100 name`  |
+| `HGETALL` | `HGETALL <key>`              | Returns all fields and values of a hash.           | `HGETALL user:100`       |
+| `HLEN`    | `HLEN <key>`                 | Returns the number of fields in a hash.            | `HLEN user:100`          |
 
 ---
 
 ### 🔹 Set Operations
 
-| Command | Usage | Description | Example |
-| :--- | :--- | :--- | :--- |
-| `SADD` | `SADD <key> <member>` | Adds a member to a set. | `SADD tags golang` |
-| `SREM` | `SREM <key> <member>` | Removes a member from a set. | `SREM tags golang` |
-| `SISMEMBER` | `SISMEMBER <key> <member>` | Checks if member exists in set (`1` or `0`). | `SISMEMBER tags golang` |
-| `SMEMBERS` | `SMEMBERS <key>` | Returns all members of a set. | `SMEMBERS tags` |
-| `SCARD` | `SCARD <key>` | Returns the set cardinality (number of elements). | `SCARD tags` |
+| Command     | Usage                      | Description                                       | Example                 |
+| :---------- | :------------------------- | :------------------------------------------------ | :---------------------- |
+| `SADD`      | `SADD <key> <member>`      | Adds a member to a set.                           | `SADD tags golang`      |
+| `SREM`      | `SREM <key> <member>`      | Removes a member from a set.                      | `SREM tags golang`      |
+| `SISMEMBER` | `SISMEMBER <key> <member>` | Checks if member exists in set (`1` or `0`).      | `SISMEMBER tags golang` |
+| `SMEMBERS`  | `SMEMBERS <key>`           | Returns all members of a set.                     | `SMEMBERS tags`         |
+| `SCARD`     | `SCARD <key>`              | Returns the set cardinality (number of elements). | `SCARD tags`            |
 
 ---
 
 ### 🔹 Pub/Sub Messaging
 
-| Command | Usage | Description | Example |
-| :--- | :--- | :--- | :--- |
-| `SUBSCRIBE` | `SUBSCRIBE <channel>` | Subscribes the current client connection to a channel. | `SUBSCRIBE news` |
-| `PUBLISH` | `PUBLISH <channel> <message>` | Posts a message to a channel. Returns subscriber count. | `PUBLISH news "Hello World"` |
+| Command     | Usage                         | Description                                             | Example                      |
+| :---------- | :---------------------------- | :------------------------------------------------------ | :--------------------------- |
+| `SUBSCRIBE` | `SUBSCRIBE <channel>`         | Subscribes the current client connection to a channel.  | `SUBSCRIBE news`             |
+| `PUBLISH`   | `PUBLISH <channel> <message>` | Posts a message to a channel. Returns subscriber count. | `PUBLISH news "Hello World"` |
 
 ---
 
 ### 🔹 Persistence
 
-| Command | Usage | Description | Example |
-| :--- | :--- | :--- | :--- |
-| `SAVE` | `SAVE` | Persists all memory state to disk (`snapshots/dump.json`). | `SAVE` |
-| `LOAD` | `LOAD` | Restores memory state from disk (`snapshots/dump.json`). | `LOAD` |
+| Command | Usage  | Description                                                | Example |
+| :------ | :----- | :--------------------------------------------------------- | :------ |
+| `SAVE`  | `SAVE` | Persists all memory state to disk (`snapshots/dump.json`). | `SAVE`  |
+| `LOAD`  | `LOAD` | Restores memory state from disk (`snapshots/dump.json`).   | `LOAD`  |
 
 ---
 
 ## 🛠️ Usage Examples
 
 ### 1. Hash & Expiration Workflow
+
 ```text
 flashkv> HSET user:42 name "Hari"
 OK
@@ -203,6 +212,7 @@ flashkv> TTL user:42
 ### 2. Pub/Sub Demonstration
 
 **Client 1 (Subscriber):**
+
 ```text
 flashkv> SUBSCRIBE alerts
 Subscribed to alerts
@@ -210,6 +220,7 @@ Subscribed to alerts
 ```
 
 **Client 2 (Publisher):**
+
 ```text
 flashkv> PUBLISH alerts "High CPU usage detected!"
 1
@@ -251,7 +262,7 @@ The following features are actively under development or planned for upcoming re
 - [ ] **Unit & Integration Test Suite**: Comprehensive testing coverage across concurrency handlers, TTL cleanup, Pub/Sub broadcasting, and command parsers.
 - [ ] **Performance Benchmarks**: Benchmark suite (`go test -bench`) for measuring ops/sec, throughput, and memory allocations.
 - [ ] **Docker & Docker Compose**: Official containerized setup (`Dockerfile` & `docker-compose.yml`) for seamless deployment.
-- [ ] **Sorted Sets (`ZSET`)** *(Optional)*: Skip-list or balanced-tree backed sorted sets for score-based ranking queries (`ZADD`, `ZRANGE`, `ZSCORE`).
+- [ ] **Sorted Sets (`ZSET`)** _(Optional)_: Skip-list or balanced-tree backed sorted sets for score-based ranking queries (`ZADD`, `ZRANGE`, `ZSCORE`).
 
 ---
 
