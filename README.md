@@ -279,12 +279,6 @@ Feel free to check the [issues page](https://github.com/Hari08-dev/flashkv/issue
 
 ---
 
-## 📜 License
-
-Distributed under the MIT License. See [`LICENSE`](LICENSE) for more information.
-
----
-
 <p align="center">
   Crafted with ❤️ by <a href="https://github.com/Hari08-dev">Hari08-dev</a>
 </p>
