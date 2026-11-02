@@ -3,7 +3,7 @@ package pubsub
 import (
 	"sync"
 
-	"github.com/Hari08-dev/flashkv/internal/client"
+	"FlashKV/internal/client"
 )
 
 type PubSub struct {

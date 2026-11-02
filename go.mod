@@ -1,4 +1,4 @@
-module github.com/Hari08-dev/flashkv
+module FlashKV
 
 go 1.26.5
 

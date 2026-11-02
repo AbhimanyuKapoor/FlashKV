@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Hari08-dev/flashkv/internal/client"
+	"FlashKV/internal/client"
 )
 
 type RPushCommand struct {

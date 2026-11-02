@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/Hari08-dev/flashkv/internal/datastore"
+	"FlashKV/internal/datastore"
 )
 
 type Snapshot struct {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/Hari08-dev/flashkv/internal/client"
+	"FlashKV/internal/client"
 )
 
 type HGetAllCommand struct {

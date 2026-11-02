@@ -7,10 +7,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Hari08-dev/flashkv/internal/client"
-	"github.com/Hari08-dev/flashkv/internal/datastore"
-	"github.com/Hari08-dev/flashkv/internal/parser"
-	"github.com/Hari08-dev/flashkv/internal/ttl"
+	"FlashKV/internal/client"
+	"FlashKV/internal/datastore"
+	"FlashKV/internal/parser"
+	"FlashKV/internal/ttl"
 )
 
 type Server struct {

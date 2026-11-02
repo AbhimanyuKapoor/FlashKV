@@ -1,10 +1,5 @@
 # FlashKV ⚡
 
-[![Go Version](https://img.shields.io/badge/Go-1.26+-00ADD8?style=for-the-badge&logo=go)](https://golang.org)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](https://github.com/Hari08-dev/flashkv/pulls)
-[![Architecture](https://img.shields.io/badge/Architecture-In--Memory-orange?style=for-the-badge)](https://github.com/Hari08-dev/flashkv)
-
 **FlashKV** is a high-performance, lightweight, concurrent in-memory Key-Value store written in Go. Designed with low latency and clean modular architecture in mind, FlashKV features thread-safe data structures, non-blocking TTL key expiration routines, a real-time Pub/Sub engine, JSON snapshot persistence, and an interactive CLI client.
 
 ---
@@ -65,12 +60,7 @@ FlashKV runs as an asynchronous TCP server listening by default on port `:6379`.
 
 ### Installation
 
-Clone the repository:
-
-```bash
-git clone https://github.com/Hari08-dev/flashkv.git
-cd flashkv
-```
+Clone the repository
 
 ### Running the Server
 
@@ -265,20 +255,3 @@ The following features are actively under development or planned for upcoming re
 - [ ] **Sorted Sets (`ZSET`)** _(Optional)_: Skip-list or balanced-tree backed sorted sets for score-based ranking queries (`ZADD`, `ZRANGE`, `ZSCORE`).
 
 ---
-
-## 🤝 Contributing
-
-Contributions, issues, and feature requests are welcome!  
-Feel free to check the [issues page](https://github.com/Hari08-dev/flashkv/issues) or submit a Pull Request.
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
-
-<p align="center">
-  Crafted with ❤️ by <a href="https://github.com/Hari08-dev">Hari08-dev</a>
-</p>

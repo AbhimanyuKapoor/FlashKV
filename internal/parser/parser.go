@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Hari08-dev/flashkv/internal/client"
-	"github.com/Hari08-dev/flashkv/internal/commands"
-	"github.com/Hari08-dev/flashkv/internal/datastore"
-	"github.com/Hari08-dev/flashkv/internal/pubsub"
+	"FlashKV/internal/client"
+	"FlashKV/internal/commands"
+	"FlashKV/internal/datastore"
+	"FlashKV/internal/pubsub"
 )
 
 type Parser struct {

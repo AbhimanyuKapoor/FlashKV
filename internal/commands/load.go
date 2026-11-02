@@ -3,8 +3,8 @@ package commands
 import (
 	"fmt"
 
-	"github.com/Hari08-dev/flashkv/internal/client"
-	"github.com/Hari08-dev/flashkv/internal/persistence"
+	"FlashKV/internal/client"
+	"FlashKV/internal/persistence"
 )
 
 type LoadCommand struct {

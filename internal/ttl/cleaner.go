@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/Hari08-dev/flashkv/internal/datastore"
+	"FlashKV/internal/datastore"
 )
 
 type Cleaner struct {

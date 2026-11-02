@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/Hari08-dev/flashkv/internal/client"
+	"FlashKV/internal/client"
 )
 
 type ExpireCommand struct {

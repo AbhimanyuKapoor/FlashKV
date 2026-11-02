@@ -1,9 +1,9 @@
 package commands
 
 import (
-	"github.com/Hari08-dev/flashkv/internal/client"
-	"github.com/Hari08-dev/flashkv/internal/datastore"
-	"github.com/Hari08-dev/flashkv/internal/pubsub"
+	"FlashKV/internal/client"
+	"FlashKV/internal/datastore"
+	"FlashKV/internal/pubsub"
 )
 
 type Command interface {

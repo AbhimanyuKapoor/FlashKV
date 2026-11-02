@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/Hari08-dev/flashkv/internal/server"
+	"FlashKV/internal/server"
 )
 
 func main() {
